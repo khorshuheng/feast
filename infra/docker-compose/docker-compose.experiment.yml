@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  core:
+    image: ${FEAST_CORE_IMAGE}:${FEAST_VERSION}
+    volumes:
+      - ./core/${FEAST_CORE_CONFIG}:/etc/feast/application.yml
+      - ./gcp-service-accounts/${FEAST_CORE_GCP_SERVICE_ACCOUNT_KEY}:/etc/gcloud/service-accounts/key.json
+    environment:
+      DB_HOST: db
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/gcloud/service-accounts/key.json
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 6565:6565
+    command:
+      - java
+      - -jar
+      - /opt/feast/feast-core.jar
+      - --spring.config.additional-location=file:/etc/feast/
+
+  online-serving:
+    image: ${FEAST_SERVING_IMAGE}:${FEAST_VERSION}
+    volumes:
+      - ./serving/${FEAST_ONLINE_SERVING_CONFIG}:/config/application.yml
+      - ./serving/${FEAST_ONLINE_STORE_CONFIG}:/etc/feast/store.yml
+    depends_on:
+      - core
+    ports:
+      - 6566:6566
+    restart: on-failure
+    command:
+      - java
+      - -jar
+      - /opt/feast/feast-serving.jar
+      - --spring.config.additional-location=file:/etc/feast/application.yml
+
+  db:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: password
