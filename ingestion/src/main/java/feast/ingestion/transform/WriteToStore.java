@@ -90,6 +90,8 @@ public abstract class WriteToStore extends PTransform<PCollection<FeatureRow>, P
         PCollection<FailedElement> redisWriteResult =
             input
                 .apply(
+                    FilterOutdatedFeatureRow.newBuilder().setFeatureSets(getFeatureSets()).build())
+                .apply(
                     "FeatureRowToRedisMutation",
                     ParDo.of(new FeatureRowToRedisMutationDoFn(getFeatureSets())))
                 .apply("WriteRedisMutationToRedis", RedisCustomIO.write(getStore()));

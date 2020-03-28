@@ -18,6 +18,7 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 import "feast/types/Field.proto";
+import "feast/types/Value.proto";
 
 package feast.types;
 
@@ -39,4 +40,15 @@ message FeatureRow {
     // <project>/<feature-set-name>:<version>. This value will be used by the feast ingestion job to filter
     // rows, and write the values to the correct tables.
     string feature_set = 6;
+}
+
+message FeatureRowKey {
+
+    // Complete reference to the featureSet this featureRow belongs to, in the form of
+    // <project>/<feature-set-name>:<version>. This value will be used by the feast ingestion job to filter
+    // rows, and write the values to the correct tables.
+    string feature_set = 1;
+
+    // List of entity values, sorted by the entity name alphabetically in ascending order.
+    repeated feast.types.Value entityValues = 2;
 }
