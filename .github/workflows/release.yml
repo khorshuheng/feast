@@ -22,6 +22,11 @@ jobs:
         RELEASE_VERSION: ${{ steps.get_release_version.outputs.release_version }}
       run: |
         echo ::set-output name=version_without_prefix::${RELEASE_VERSION:1}
+    - name: ls
+      id: list_dir
+      run: |
+        pwd
+        ls
     - name: Get highest semver
       id: get_highest_semver
       env:
