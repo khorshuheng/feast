@@ -21,7 +21,6 @@ pytest-timeout
 pytest-ordering==0.6.*
 PyYAML==5.1.*
 fastavro==0.*
-pyarrow
 Sphinx
 sphinx-rtd-theme
 toml==0.10.*
@@ -38,5 +37,7 @@ flake8
 black==19.10b0
 boto3
 moto
+pyarrow==0.17.0
 pyspark==2.4.2
 pyspark-stubs==2.4.0.post9
+tensorflow-data-validation==0.25.0
